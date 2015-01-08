@@ -1,21 +1,21 @@
-# Simple Role Syntax
-# ==================
-# Supports bulk-adding hosts to roles, the primary server in each group
-# is considered to be the first unless any hosts have the primary
-# property set.  Don't declare `role :all`, it's a meta role.
+set :stage, :test
+set :branch, 'develop'
 
-role :app, %w{deploy@example.com}
-role :web, %w{deploy@example.com}
-role :db,  %w{deploy@example.com}
+server '119.29.2.105', sshkey: 'home/vagrant/.ssh/simple', user: 'ubuntu', port: '22', roles: %w{web app db}
 
+set :deploy_to, "/home/#{fetch(:deploy_user)}/www/simple.com"
 
-# Extended Server Syntax
-# ======================
-# This can be used to drop a more detailed server definition into the
-# server list. The second argument is a, or duck-types, Hash and is
-# used to set extended properties on the server.
+# dont try and infer something as important as environment from
+# stage name.
+set :rails_env, :test
 
-server 'example.com', user: 'deploy', roles: %w{web app}, my_property: :my_value
+# number of unicorn workers, this will be reflected in
+# the unicorn.rb and the monit configs
+set :unicorn_worker_count, 5
+
+# whether we're using ssl or not, used for building nginx
+# config file
+set :enable_ssl, false
 
 
 # Custom SSH Options
